@@ -20,45 +20,45 @@ struct Config {
 };
 
 struct TransformerWeights {
-    std::vector<float> token_embedding_table;  // [vocab_size, dim]
+    tensor2d token_embedding_table;  // [vocab_size, dim]
     // weights for rmsnorms
-    std::vector<float> rms_att_weight;  // [layer, dim]
-    std::vector<float> rms_ffn_weight;  // [layer, dim]
-    // weights for matmuls. note dim == n_heads * head_size
-    std::vector<float> wq;  // [layer, dim, n_heads * head_size]
-    std::vector<float> wk;  // [layer, dim, n_kv_heads * head_size]
-    std::vector<float> wv;  // [layer, dim, n_kv_heads * head_size]
-    std::vector<float> wo;  // [layer, n_heads * head_size, dim]
+    tensor2d rms_att_weight;  // [layer, dim]
+    tensor2d rms_ffn_weight;  // [layer, dim]
+    // weights for attention matmuls
+    tensor3d wq;  // [layer, dim, dim]
+    tensor3d wk;  // [layer, dim, dim]
+    tensor3d wv;  // [layer, dim, dim]
+    tensor3d wo;  // [layer, dim, dim]
     // weights for ffn
-    std::vector<float> w1;  // [layer, hidden_dim, dim]
-    std::vector<float> w2;  // [layer, dim, hidden_dim]
-    std::vector<float> w3;  // [layer, hidden_dim, dim]
+    tensor3d w1;  // [layer, hidden_dim, dim]
+    tensor3d w2;  // [layer, dim, hidden_dim]
+    tensor3d w3;  // [layer, hidden_dim, dim]
     // final rmsnorm
-    std::vector<float> rms_final_weight;  // [dim]
-    // (optional) classifier weights for the logits, on the last layer
-    std::vector<float> wcls; 
+    tensor1d rms_final_weight;  // [dim]
+    // freq_cis for RoPE relatively positional embeddings
+    tensor2d freq_cis_real;  // [seq_len, (dim/n_heads)/2]
+    tensor2d freq_cis_imag;  // [seq_len, (dim/n_heads)/2]
 };
 
 struct RunState {
     // current wave of activations
-    std::vector<float> x;  // activation at current time stamp [dim]
-    std::vector<float> xb;  // same, but inside a residual branch [dim]
-    std::vector<float> xb2;  // an additional buffer just for convenience [dim]
-    std::vector<float> hb;  // buffer for hidden dimension in the ffn [hidden_dim]
-    std::vector<float> hb2;  // another buffer for hidden dimension in the ffn [hidden_dim]
-    std::vector<float> q;  // query [dim]
-    std::vector<float> k;  // key [dim]
-    std::vector<float> v;  // value [dim]
-    std::vector<float> att;  // buffer for scores/attention values [n_heads, seq_len]
-    std::vector<float> logits;  // buffer for logits
+    tensor1d x;  // activation at current time stamp [dim]
+    tensor1d xb;  // same, but inside a residual branch [dim]
+    tensor1d xb2;  // an additional buffer just for convenience [dim]
+    tensor1d hb;  // buffer for hidden dimension in the ffn [hidden_dim]
+    tensor1d hb2;  // another buffer for hidden dimension in the ffn [hidden_dim]
+    tensor1d q;  // query [dim]
+    tensor1d k;  // key [dim]
+    tensor1d v;  // value [dim]
+    tensor1d attention;  // buffer for scores/attention values [seq_len]
+    tensor1d logits;  // buffer for logits [vocab_size]
     // kv cache
-    std::vector<float> key_cache;  // [layer, seq_len, dim]
-    std::vector<float> value_cache;  // [layer, seq_len, dim]
+    tensor3d key_cache;  // [layer, seq_len, dim]
+    tensor3d value_cache;  // [layer, seq_len, dim]
 };
 
 class Transformer
 {
-public:
 public:
     /* data */
     Config config; // the hyperparameters of the architecture (the blueprint)
