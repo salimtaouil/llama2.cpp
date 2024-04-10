@@ -2,7 +2,7 @@
 
 This repo includes the Capstone project in the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). The code was developed in order to satisfy all criteria for the “README” and “Compiling and Testing” sections in [Rubric](https://review.udacity.com/#!/rubrics/2533/view), and at least 5 total criteria from the rest of the specification.
 
-<img src="run.png"/>
+<img src="Run.png"/>
 
 ## The Capstone project (llama2.cpp) meets following project requirements:
 
