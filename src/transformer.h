@@ -3,13 +3,10 @@
 
 #include <vector>
 #include <string>
-#include <memory>
 
 typedef std::vector<float> tensor1d;
 typedef std::vector<tensor1d> tensor2d;
 typedef std::vector<tensor2d> tensor3d;
-
-float EPS = 1e-5;
 
 struct Config {
     int dim; // transformer dimension
@@ -61,16 +58,20 @@ struct RunState {
 
 class Transformer
 {
-private:
+public:
     /* data */
     Config config; // the hyperparameters of the architecture (the blueprint)
     TransformerWeights weights; // the weights of the model
     RunState state; // buffers for the "wave" of activations in the forward pass
-public:
-    Transformer(/* args */);
+    /* methods */
+    Transformer(std::string checkpoint);
     ~Transformer();
-    void BuildTransformer(const std::string &checkpoint_path);
-    void ReadCheckPoint(const std::string &checkpoint);
+    void ReadCheckPoint(const std::string checkpoint);
+    void resize_state_tensors();
+    void resize_weights_tensors();
+    std::string GetCheckPoint();
+private:
+    std::string checkpoint_;
 };
 
 #endif
