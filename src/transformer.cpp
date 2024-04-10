@@ -2,6 +2,10 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include "transformer.h"
+#include <vector>
+#include <fstream>
+#include <iostream>
 
 Transformer::Transformer(std::string checkpoint) : checkpoint_{checkpoint}
 {

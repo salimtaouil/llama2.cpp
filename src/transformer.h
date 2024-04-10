@@ -59,6 +59,7 @@ struct RunState {
 class Transformer
 {
 public:
+public:
     /* data */
     Config config; // the hyperparameters of the architecture (the blueprint)
     TransformerWeights weights; // the weights of the model
